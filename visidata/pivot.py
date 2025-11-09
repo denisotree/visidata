@@ -59,11 +59,13 @@ class AggrColumn(Column):
 def makeAggrColumn(aggcol, aggregator):
     aggname = '%s_%s' % (aggcol.name, aggregator.name)
 
-    return AggrColumn(aggname,
+    newcol = AggrColumn(aggname,
                   type=aggregator.type or aggcol.type,
                   fmtstr=aggcol.fmtstr,
                   origCol=aggcol,
                   aggregator=aggregator)
+    newcol.copyCurrencyMetadata(aggcol)
+    return newcol
 
 
 class PivotSheet(Sheet):
@@ -95,6 +97,7 @@ class PivotSheet(Sheet):
                                   origcol=c,
                                   getter=lambda col,row,i=colnum: row.discrete_keys[i],
                                   setter=lambda col,row,val,i=colnum: setitem(row.discrete_keys, i, val) and col.origcol.setValues(row.sourcerows, val))
+                newcol.copyCurrencyMetadata(c)
 
             self.addColumn(newcol)
 
