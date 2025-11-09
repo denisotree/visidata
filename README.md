@@ -1,73 +1,104 @@
-# VisiData v3.3
+# Visidata NG v1.0
 
-[![Tests](https://github.com/saulpw/visidata/workflows/visidata-ci-build/badge.svg)](https://github.com/saulpw/visidata/actions/workflows/main.yml)
-[![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/saulpw/visidata)
+<!-- //windsurf-scope: RENAME-REPO -->
 
-[![discord](https://img.shields.io/discord/880915750007750737?label=discord)](https://visidata.org/chat)
-[![mastodon @visidata@fosstodon.org][2.1]][2]
-[![twitter @VisiData][1.1]][1]
+## Project overview
 
-A terminal interface for exploring and arranging tabular data.
+**Visidata NG** is a community-maintained fork of the
+[VisiData](https://github.com/saulpw/visidata) project created by
+[Saul Pwanson](mailto:vd@saul.pw). This fork remains fully compliant with the
+GNU GPLv3, retains upstream copyright notices, and incorporates local
+modifications that are clearly documented throughout this repository.
 
-![Frequency table](http://visidata.org/freq-move-row.gif)
+![Frequency table](https://visidata.org/freq-move-row.gif)
 
-VisiData supports tsv, csv, sqlite, json, xlsx (Excel), hdf5, and [many other formats](https://visidata.org/formats).
+## Release information
+
+- Current release: **1.0** (2025-11-09)
+- Release notes: see [CHANGELOG.md](CHANGELOG.md)
+
+## Project scope
+
+* Goal: provide an officially independent distribution that continues to
+  develop the VisiData codebase while crediting upstream authors.
+* License: GNU GPLv3 (see [LICENSE.gpl3](LICENSE.gpl3)).
+* Attribution: all upstream notices are preserved. New contributions are
+  © their respective authors and released under GPLv3.
+* Upstream relationship: this project is not affiliated with the original
+  maintainers. Compatibility with upstream releases is pursued on a
+  best-effort basis.
 
 ## Platform requirements
 
-- Linux, OS/X, or Windows (with WSL)
-- Python 3.8+
-- additional Python modules are required for certain formats and sources
+* Linux, macOS, or Windows (via WSL)
+* Python 3.8+
+* Optional extras enabled via `requirements.txt`
 
-## Install
+## Installation
 
-To install the latest release from PyPi:
+Until PyPI packages are published under the `visidata-ng` name, install
+directly from source:
 
-    pip3 install visidata
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install --upgrade pip
+pip install -r requirements.txt
+pip install -e .
+```
 
-To install the cutting edge `develop` branch (no warranty expressed or implied):
+To install a specific revision:
 
-    pip3 install git+https://github.com/saulpw/visidata.git@develop
+```bash
+pip install git+https://github.com/denisotree/visidata-ng.git@<tag-or-branch>
+```
 
-See [visidata.org/install](https://visidata.org/install) for detailed instructions for all available platforms and package managers.
+## Usage
 
-### Usage
+```bash
+vd <input>
+<command> | vd
+```
 
-    $ vd <input>
-    $ <command> | vd
+Press `Ctrl+Q` to quit at any time. The CLI entry point remains `vd` for
+backward compatibility with existing workflows.
 
-Press `Ctrl+Q` to quit at any time.
+## Documentation
 
-Hundreds of other commands and options are also available; see the documentation.
-
-### Documentation
+The upstream documentation remains a comprehensive reference while local
+changes are stabilised:
 
 * [VisiData documentation](https://visidata.org/docs)
 * [Plugin Author's Guide and API Reference](https://visidata.org/docs/api)
-* [Quick reference](https://visidata.org/man) (available within `vd` with `Ctrl+H`), which has a list of commands and options.
-* [Intro to VisiData Tutorial](https://jsvine.github.io/intro-to-visidata/) by [Jeremy Singer-Vine](https://www.jsvine.com/)
+* [Quick reference](https://visidata.org/man) (also accessible within `vd`
+  via `Ctrl+H`)
+* [Intro to VisiData Tutorial](https://jsvine.github.io/intro-to-visidata/)
 
-### Help and Support
+This repository will publish Visidata NG-specific documentation under the
+`docs/` directory as changes diverge from upstream.
 
-If you have a question, issue, or suggestion regarding VisiData, please [create an issue on Github](https://github.com/saulpw/visidata/issues) or chat with us at #visidata on [irc.libera.chat](https://libera.chat/).
+## Support and issue tracking
 
-If you use VisiData regularly, please [support me on Patreon](https://www.patreon.com/saulpw)!
+Please open GitHub issues at
+<https://github.com/denisotree/visidata-ng/issues>. Feature requests aimed at
+the upstream project should be filed with the original maintainers instead.
 
-## License
+Community chat remains available through the public channels operated by the
+upstream maintainers (Discord, IRC, Mastodon) unless alternative venues are
+announced here.
 
-Code in the `stable` branch of this repository, including the main `vd` application, loaders, and plugins, is available for use and redistribution under GPLv3.
+## License and attribution
+
+Code is provided under the [GNU General Public License v3.0](LICENSE.gpl3).
+All files derived from VisiData retain the original copyright notices.
+Modifications in this fork are attributed within commit history and changelog
+entries. When redistributing binary builds, include the full text of the
+license and acknowledge both upstream and Visidata NG contributors.
 
 ## Credits
 
-VisiData is conceived and developed by Saul Pwanson `<vd@saul.pw>`.
+Visidata NG is made possible thanks to the original VisiData authors,
+contributors, and community. This fork extends their work; please support the
+upstream project via [Patreon](https://www.patreon.com/saulpw) if you rely on
+their ongoing maintenance.
 
-Anja Kefala `<anja.kefala@gmail.com>` maintains the documentation and packages for all platforms.
-
-Many thanks to numerous other [contributors](https://visidata.org/credits/), and to those wonderful users who provide feedback, for helping to make VisiData the awesome tool that it is.
-
-[1.1]: http://i.imgur.com/tXSoThF.png
-[1]: http://www.twitter.com/VisiData
-[2.1]: https://raw.githubusercontent.com/mastodon/mastodon/main/app/javascript/images/logo.svg
-[2]: https://fosstodon.org/@visidata
-
-<!-- Please don't remove this: Grab your social icons from https://github.com/carlsednaoui/gitsocial -->
