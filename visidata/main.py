@@ -3,7 +3,7 @@
 #        $0 [<options>] --play <cmdlog> [--batch] [-w <waitsecs>] [-o <output>] [field=value ...]
 
 __version__ = '1.01'
-__version_info__ = 'saul.pw/VisiData v' + __version__
+__version_info__ = 'VisiData NG v' + __version__
 
 from copy import copy
 import os

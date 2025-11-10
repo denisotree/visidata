@@ -1,6 +1,11 @@
 import datetime
+import re
 
-from visidata import VisiData, vd, Sheet
+from visidata import VisiData, vd, Sheet, Column, AttrDict, dispwidth
+
+
+_BRACKET_TRAIL_RE = re.compile(r'\[[^\]]*\]\s*$')
+_BRACKET_ANY_RE = re.compile(r'\[[^\]]*\]')
 
 @VisiData.lazy_property
 def date_parse(vd):
@@ -10,6 +15,32 @@ def date_parse(vd):
     except ImportError:
         vd.warning('install python-dateutil for date type')
         return str
+
+
+def _normalize_datestr(val: str, allow_wild: bool = False) -> str:
+    """Return *val* normalized for python-dateutil parsing.
+
+    Removes bracketed timezone annotations (e.g. ``[UTC]``) and converts a
+    trailing ``Z`` into ``+00:00`` so that dateutil consistently recognizes it.
+    When *allow_wild* is True, bracketed annotations anywhere in the string are
+    stripped instead of just the trailing suffix.
+    """
+    s = (val or '').strip()
+    if not s:
+        return s
+
+    # Normalize explicit "Z[UTC]" suffixes first.
+    s = s.replace('Z[UTC]', 'Z')
+
+    if allow_wild:
+        s = _BRACKET_ANY_RE.sub('', s)
+    else:
+        s = _BRACKET_TRAIL_RE.sub('', s)
+
+    if s.endswith('Z'):
+        s = s[:-1] + '+00:00'
+
+    return s
 
 vd.help_date = '''
 - RFC3339: `%Y-%m-%d %H:%M:%S.%f %z`
@@ -45,7 +76,11 @@ class date(datetime.datetime):
         if isinstance(s, int) or isinstance(s, float):
             r = datetime.datetime.fromtimestamp(s)
         elif isinstance(s, str):
-            r = vd.date_parse(s)
+            cleaned = _normalize_datestr(s)
+            try:
+                r = vd.date_parse(cleaned)
+            except ValueError:
+                r = vd.date_parse(_normalize_datestr(cleaned, allow_wild=True))
         elif isinstance(s, (datetime.datetime, datetime.date)):
             r = s
         else:
@@ -108,6 +143,87 @@ class date(datetime.datetime):
         return super().__sub__(n)
 
 
+DATE_TYPE_CHOICES = [
+    AttrDict(key='datetime', desc='Date & time', fmtstr='%Y-%m-%d %H:%M:%S'),
+    AttrDict(key='date', desc='Date', fmtstr=''),
+    AttrDict(key='month', desc='Month', fmtstr='%Y-%m'),
+    AttrDict(key='year', desc='Year', fmtstr='%Y'),
+]
+
+DATE_TYPE_LOOKUP = {choice.key: choice for choice in DATE_TYPE_CHOICES}
+
+Column.init('date_type_key', lambda: '', copy=True)
+
+
+@VisiData.property
+def date_type_choices(vd):
+    return DATE_TYPE_CHOICES
+
+
+@VisiData.api
+def chooseDateType(vd, prompt='choose date type: '):
+    pad = ' ' * max(dispwidth(prompt)-3, 0)
+
+    def _fmt_summary(match, row, trigger_key):
+        code = match.formatted.get('key', row.key) if match else row.key
+        label = match.formatted.get('desc', row.desc) if match else row.desc
+        return f"{pad}[:keystrokes]{trigger_key}[/]  {code} - {label}"
+
+    # Only pass string fields to the palette to avoid None in fuzzymatch
+    items = [AttrDict(key=c.key, desc=c.desc) for c in vd.date_type_choices]
+
+    return vd.activeSheet.inputPalette(
+        prompt,
+        items,
+        value_key='key',
+        formatter=_fmt_summary,
+        type='date',
+    )
+
+
+@Column.api
+def applyDateType(col, date_type_key, *, recalc=True, quiet=False):
+    choice = DATE_TYPE_LOOKUP.get(date_type_key)
+    if not choice:
+        vd.warning(f'date type does not exist: {date_type_key}')
+        return col
+
+    col.type = date
+    col.date_type_key = choice.key
+    col.displayer = 'generic'
+
+    fmtstr = choice.fmtstr or vd.options.disp_date_fmt
+    col.fmtstr = fmtstr
+    if recalc:
+        col.recalc()
+
+    if not quiet:
+        desc = getattr(choice, 'desc', None)
+        text = desc if isinstance(desc, str) else choice.key
+        text_str = str(text)
+        vd.status(f'{col.name} typed as {text_str.lower()}')
+    return col
+
+
+@Column.api
+def chooseDateType(col):
+    selected = vd.chooseDateType()
+    if selected:
+        col.applyDateType(selected)
+
+
+@Column.api
+def copyDateMetadata(col, src_col):
+    src_key = getattr(src_col, 'date_type_key', '')
+    if not src_key:
+        return col
+
+    # Preserve formatting without triggering a full recalc or status update.
+    col.applyDateType(src_key, recalc=False, quiet=True)
+    col.fmtstr = getattr(src_col, '_fmtstr', None) or col.fmtstr
+    return col
+
+
 class datedelta(datetime.timedelta):
     def __float__(self):
         return self.total_seconds()
@@ -127,12 +243,17 @@ vd.addGlobals(
     date=date)
 
 
-Sheet.addCommand('@', 'type-date', 'cursorCol.type = date', 'set type of current column to date')
+Sheet.addCommand('@', 'choose-date-type', 'cursorCol.chooseDateType()', 'choose date type for the current column')
+Sheet.addCommand('', 'type-date', 'cursorCol.applyDateType("date")', 'set type of current column to date')
 Sheet.addCommand('', 'type-datedelta', 'cursorCol.type = datedelta', 'set type of current column to datedelta')
-Sheet.addCommand('', 'type-datetime', 'cursorCol.type=date; cursorCol.fmtstr="%Y-%m-%d %H:%M:%S"', 'set type of current column to datetime')
+Sheet.addCommand('', 'type-datetime', 'cursorCol.applyDateType("datetime")', 'set type of current column to datetime')
+Sheet.addCommand('', 'type-month', 'cursorCol.applyDateType("month")', 'set type of current column to month')
+Sheet.addCommand('', 'type-year', 'cursorCol.applyDateType("year")', 'set type of current column to year')
 
 vd.addMenuItems('''
     Column > Type as > date > type-date
     Column > Type as > datetime > type-datetime
+    Column > Type as > month > type-month
+    Column > Type as > year > type-year
     Column > Type as > datedelta > type-datedelta
 ''')
