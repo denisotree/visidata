@@ -1,4 +1,4 @@
-# Visidata NG v1.01
+# Visidata NG v1.02
 
 <!-- //windsurf-scope: RENAME-REPO -->
 
@@ -14,7 +14,7 @@ modifications that are clearly documented throughout this repository.
 
 ## Release information
 
-- Current release: **1.01** (2025-11-09)
+- Current release: **1.02** (2025-11-10)
 - Release notes: see [CHANGELOG.md](CHANGELOG.md)
 
 ## Project scope

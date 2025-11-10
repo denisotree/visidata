@@ -2,6 +2,13 @@
 
 <!-- //windsurf-scope: RENAME-REPO -->
 
+## 1.02 (2025-11-10)
+
+- Added date type selection palette on `@` and made it robust against non-string palette fields.
+- Improved date parsing to handle bracketed timezone annotations (e.g. `Z[UTC]`) and normalize `Z` to `+00:00`.
+- Fixed `AttributeError` arising from `.lower()` on `None` in date-type workflows and status reporting.
+- Introduced `copyDateMetadata` to preserve date formatting on derived columns.
+
 ## 1.01 (2025-11-09)
 
 - Added currency selection palette when typing columns as currency, including top global and regional currencies.
