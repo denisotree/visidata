@@ -1,4 +1,4 @@
-# Visidata NG v1.03
+# Visidata NG v1.04
 
 <!-- //windsurf-scope: RENAME-REPO -->
 
@@ -14,7 +14,7 @@ modifications that are clearly documented throughout this repository.
 
 ## Release information
 
-- Current release: **1.03** (2025-12-18)
+- Current release: **1.04** (2025-12-18)
 - Release notes: see [CHANGELOG.md](CHANGELOG.md)
 
 ## Project scope
@@ -72,6 +72,7 @@ changes are stabilised:
 * [Plugin Author's Guide and API Reference](https://visidata.org/docs/api)
 * [Quick reference](https://visidata.org/man) (also accessible within `vd`
   via `Ctrl+H`)
+* [Window Functions Guide](docs/window_functions.md) - Learn how to use `lag`, `lead`, and `moving_average`.
 * [Intro to VisiData Tutorial](https://jsvine.github.io/intro-to-visidata/)
 
 This repository will publish Visidata NG-specific documentation under the

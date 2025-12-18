@@ -2,6 +2,13 @@
 
 <!-- //windsurf-scope: RENAME-REPO -->
  
+## 1.04 (2025-12-18)
+
+- Implemented window functions feature (`lag`, `lead`, `moving_average`) with a flexible dot-notation DSL.
+- Added "Window function column" to the "Column > Add column" menu.
+- Supported partitioning (`partition_by`) and ordering (`order_by`) for window calculations.
+- Ensured TUI stability by separating user input from background async calculations.
+
 ## 1.03 (2025-12-18)
 
 - Implemented copy column format choice for `zY` and `gzY`, allowing vertical (column) or delimiter-joined (list) output.
