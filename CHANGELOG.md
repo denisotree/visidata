@@ -1,6 +1,12 @@
 # Visidata NG Changelog
 
 <!-- //windsurf-scope: RENAME-REPO -->
+ 
+## 1.03 (2025-12-18)
+
+- Implemented copy column format choice for `zY` and `gzY`, allowing vertical (column) or delimiter-joined (list) output.
+- Enhanced `syscopyColumn` to prompt for custom delimiters when copying column data to the system clipboard.
+- Updated documentation and menu items to reflect the new copy column functionality.
 
 ## 1.02 (2025-11-10)
 

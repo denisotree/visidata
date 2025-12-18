@@ -1,10 +1,10 @@
 'VisiData: a curses interface for exploring and arranging tabular data'
 
-__version__ = '1.02'
+__version__ = '1.03'
 __version_info__ = 'VisiData NG v' + __version__
 __author__ = 'Saul Pwanson <vd@saul.pw>'
 __status__ = 'Production/Stable'
-__copyright__ = 'Copyright (c) 2016-2024 ' + __author__
+__copyright__ = 'Copyright (c) 2016-2025 ' + __author__
 
 
 class EscapeException(BaseException):

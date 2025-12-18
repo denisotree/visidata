@@ -1,4 +1,4 @@
-.Dd June 13, 2025
+.Dd December 18, 2025
 .Dt vd \&1 "Quick Reference Guide"
 .Os Linux/MacOS
 .
@@ -349,7 +349,7 @@ paste to cells of current column for current/selected row(s) using the system cl
 .It Ic "  Y   gY"
 .No yank (copy) current/all selected row(s) to system clipboard (using Sy options.clipboard_copy_cmd Ns )
 .It Ic " zY  gzY"
-.No yank (copy) contents of current column for current/selected row(s) to system clipboard (using Sy options.clipboard_copy_cmd Ns )
+.No yank (copy) current/selected row(s) of current column to system clipboard (using Sy options.clipboard_copy_cmd Ns ); prompts for format choice
 .It Ic "  f"
 fill null cells in current column with contents of non-null cells up the current column
 .
