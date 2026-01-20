@@ -8,6 +8,7 @@ import functools
 import os
 import itertools
 import platform
+import re
 
 from visidata import VisiData, vd, asyncthread, SettableColumn, AttrDict
 from visidata import Sheet, Path, Column
@@ -143,7 +144,23 @@ def syscopyColumn(sheet, rows):
         res = '\n'.join(vals)
     elif choice == 'delimiter list':
         delimiter = vd.input("delimiter: ", value=', ')
-        res = delimiter.join(vals)
+        
+        quoted_vals = []
+        is_numeric_type = col.typestr in ('int', 'float', 'vlen')
+        
+        for val in vals:
+            should_quote = True
+            if is_numeric_type:
+                # check if val is a clean number without extra formatting
+                if re.match(r'^\s*[+\-]?(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)(?:[eE][+\-]?[0-9]+)?\s*$', val):
+                    should_quote = False
+            
+            if should_quote:
+                quoted_vals.append(f"'{val}'")
+            else:
+                quoted_vals.append(val)
+                
+        res = delimiter.join(quoted_vals)
     else:
         vd.fail(f"unknown choice: {choice}")
 

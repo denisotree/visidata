@@ -2,6 +2,12 @@
 
 <!-- //windsurf-scope: RENAME-REPO -->
  
+## 1.05 (2026-01-20)
+
+- Refined `z+Shift+y` copy behavior: direct copy of focused cell if no selection active.
+- Improved delimited copy formatting: conditional quoting for dates, currencies, strings, and formatted numbers.
+- Fixed `NameError` in `DefaultAttrDict` error handling.
+
 ## 1.04 (2025-12-18)
 
 - Implemented window functions feature (`lag`, `lead`, `moving_average`) with a flexible dot-notation DSL.
