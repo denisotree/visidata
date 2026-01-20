@@ -120,6 +120,11 @@ def syscopyCells_async(sheet, cols, rows, filetype):
 def syscopyColumn(sheet, rows):
     col = sheet.cursorCol
 
+    if sheet.nSelectedRows == 0:
+        val = col.getDisplayValue(sheet.cursorRow)
+        sheet.syscopyValue(val)
+        return
+
     choices = [
         AttrDict(key='column', desc='one value per line'),
         AttrDict(key='delimiter list', desc='joined by delimiter')
@@ -247,7 +252,7 @@ Sheet.addCommand('gzp', 'setcol-clipboard', 'setColClipboard()', 'set cells of c
 Sheet.addCommand('Y', 'syscopy-row', 'syscopyCells(visibleCols, [cursorRow])', 'yank (copy) current row to system clipboard (using options.clipboard_copy_cmd)')
 
 Sheet.addCommand('gY', 'syscopy-selected', 'syscopyCells(visibleCols, onlySelectedRows)', 'yank (copy) selected rows to system clipboard (using options.clipboard_copy_cmd)')
-Sheet.addCommand('zY', 'syscopy-column', 'syscopyColumn(someSelectedRows)', 'yank (copy) contents of current column for current/selected rows to system clipboard (using options.clipboard_copy_cmd)')
+Sheet.addCommand('zY', 'syscopy-column', 'syscopyColumn(selectedRows or [cursorRow])', 'yank (copy) contents of current column for current/selected rows to system clipboard (using options.clipboard_copy_cmd)')
 Sheet.addCommand('', 'syscopy-colname', 'syscopyValue(cursorCol.name)', 'yank (copy) current column header to system clipboard (using options.clipboard_copy_cmd)')
 Sheet.addCommand('gzY', 'syscopy-cells', 'syscopyColumn(onlySelectedRows)', 'yank (copy) contents of current column from selected rows to system clipboard (using options.clipboard_copy_cmd')
 

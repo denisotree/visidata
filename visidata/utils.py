@@ -42,7 +42,7 @@ class DefaultAttrDict(dict):
     def __getattr__(self, k):
         if k not in self:
             if k.startswith("__"):
-                raise AttributeError from e
+                raise AttributeError(k)
             self[k] = DefaultAttrDict()
         return self[k]
 
